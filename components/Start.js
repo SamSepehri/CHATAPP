@@ -34,9 +34,6 @@ export default function Start(props) {
         }
     }
 
-
-
-
     return (
         <View style={styles.container}>
             <ImageBackground

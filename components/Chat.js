@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Platform, KeyboardAvoidingView } from "react-native";
+import { View, Platform, KeyboardAvoidingView, Text, Button } from "react-native";
 import { GiftedChat, Bubble } from 'react-native-gifted-chat';
 
 
@@ -24,7 +24,13 @@ export default class Chat extends React.Component {
                         avatar: 'https://placeimg.com/140/140/any',
                     },
                 },
-            ],
+                {
+                    _id: 2,
+                    text: 'This is a system message',
+                    createdAt: new Date(),
+                    system: true,
+                },
+            ]
         })
     }
 
@@ -35,12 +41,17 @@ export default class Chat extends React.Component {
         }))
     }
 
+    // adds background colors for the chat text to the different chat users
     renderBubble(props) {
         return (
-            <Bubble {...props}
+            <Bubble
+                {...props}
                 wrapperStyle={{
+                    left: {
+                        backgroundColor: '#9de0e8'
+                    },
                     right: {
-                        backgroundColor: '#000',
+                        backgroundColor: '#E89B92',
                     },
                 }}
             />
@@ -49,13 +60,16 @@ export default class Chat extends React.Component {
 
     render() {
 
-        let name = this.props.route.params.name;
-        this.props.navigation.setOptions({ title: name });
-
         // takes the input parameters of background color defined in the start.js component
-        let bgColor = this.props.route.params.bgColor;
+
+        let name = this.props.route.params.name;
+        let color = this.props.route.params.color;
+        // let { name, color } = this.props.route.params;
+        this.props.navigation.setOptions({ title: name }, { backgroundColor: color });
+
+
         return (
-            <View style={{ flex: 1 }}>
+            <View style={{ flex: 1, backgroundColor: color }}>
                 <GiftedChat
                     renderBubble={this.renderBubble.bind(this)}
                     messages={this.state.messages}
