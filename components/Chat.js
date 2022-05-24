@@ -5,6 +5,7 @@ import { StyleSheet, View, Platform, KeyboardAvoidingView, Text } from 'react-na
 import { collection, onSnapshot, addDoc, query, orderBy } from "firebase/firestore";
 
 import { auth, db } from '../config/firebase';
+import AsyncStorage from '@react-native-community/async-storage';
 
 
 
