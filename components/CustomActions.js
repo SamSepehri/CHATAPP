@@ -4,8 +4,10 @@ import PropTypes from "prop-types";
 import * as Permissions from 'expo-permissions';
 import * as ImagePicker from 'expo-image-picker';
 import * as Location from 'expo-location';
+
 import { storage } from '../config/firebase';
 import { ref, uploadBytes, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+
 
 
 

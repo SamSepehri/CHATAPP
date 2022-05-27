@@ -2,13 +2,15 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { GiftedChat, Bubble, InputToolbar } from 'react-native-gifted-chat';
 import { StyleSheet, View, Platform, KeyboardAvoidingView, Text } from 'react-native';
 import MapView from 'react-native-maps';
+
 import { collection, onSnapshot, addDoc, query, orderBy } from "firebase/firestore";
+
 import { auth, db } from '../config/firebase';
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NetInfo from '@react-native-community/netinfo';
+
 import CustomActions from './CustomActions';
-
-
 
 
 export default function Chat(props) {
