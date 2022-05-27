@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { GiftedChat, Bubble, InputToolbar } from 'react-native-gifted-chat';
 import { StyleSheet, View, Platform, KeyboardAvoidingView, Text } from 'react-native';
-
+import MapView from 'react-native-maps';
 import { collection, onSnapshot, addDoc, query, orderBy } from "firebase/firestore";
-
 import { auth, db } from '../config/firebase';
-
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NetInfo from '@react-native-community/netinfo';
+import CustomActions from './CustomActions';
+
 
 
 
@@ -102,7 +102,9 @@ export default function Chat(props) {
             _id: message._id,
             text: message.text || '',
             createdAt: message.createdAt,
-            user: message.user
+            user: message.user,
+            image: message.image || null,
+            location: message.location || null,
         });
     }
 
@@ -119,8 +121,10 @@ export default function Chat(props) {
             querySnapshot.docs.map(doc => ({
                 _id: doc.data()._id,
                 createdAt: doc.data().createdAt.toDate(),
-                text: doc.data().text,
-                user: doc.data().user
+                text: doc.data().text || '',
+                user: doc.data().user,
+                image: doc.data().image || null,
+                location: doc.data().location || null,
             }))
         )
     }
@@ -154,6 +158,29 @@ export default function Chat(props) {
         }
     }
 
+    // Render the CustomActions component next to input bar to let user send images and geolocation
+    const renderCustomActions = (props) => {
+        return <CustomActions {...props} />;
+    };
+
+    // Render Custom View to display map when user shares geolocation
+    const renderCustomView = (props) => {
+        const { currentMessage } = props;
+        if (currentMessage.location) {
+            return (
+                <MapView
+                    style={styles.map}
+                    region={{
+                        latitude: currentMessage.location.coords.latitude,
+                        longitude: currentMessage.location.coords.longitude,
+                        latitudeDelta: 0.0922,
+                        longitudeDelta: 0.0421,
+                    }}
+                />
+            );
+        }
+        return null;
+    }
 
 
     return (
@@ -164,6 +191,8 @@ export default function Chat(props) {
             <GiftedChat
                 renderBubble={renderBubble.bind()}
                 renderInputToolbar={renderInputToolbar.bind()}
+                renderActions={renderCustomActions}
+                renderCustomView={renderCustomView}
                 messages={messages}
                 showAvatarForEveryMessage={true}
                 onSend={messages => onSend(messages)}
@@ -185,4 +214,11 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
+
+    map: {
+        width: 150,
+        height: 100,
+        borderRadius: 13,
+        margin: 3
+    }
 })
